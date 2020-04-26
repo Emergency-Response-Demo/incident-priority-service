@@ -1,6 +1,7 @@
 package com.redhat.emergency.response.incident.priority;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.StreamSupport;
 
 import com.redhat.emergency.response.incident.priority.rules.model.AveragePriority;
@@ -9,7 +10,6 @@ import com.redhat.emergency.response.incident.priority.rules.model.IncidentPrior
 import com.redhat.emergency.response.incident.priority.rules.model.PriorityZone;
 import com.redhat.emergency.response.incident.priority.rules.model.PriorityZoneApplicationEvent;
 import com.redhat.emergency.response.incident.priority.rules.model.PriorityZoneClearEvent;
-
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.reactivex.Completable;
@@ -48,6 +48,8 @@ public class RulesVerticle extends AbstractVerticle {
 
     private Timer queryTimer;
 
+    private AtomicInteger kieSessionDepth;
+
     @Override
     public Completable rxStart() {
         
@@ -66,6 +68,7 @@ public class RulesVerticle extends AbstractVerticle {
                 MeterRegistry registry = BackendRegistries.getDefaultNow();
                 assignmentTimer = Timer.builder("rules.assignment.timer").register(registry);
                 queryTimer = Timer.builder("rules.query.timer").register(registry);
+                kieSessionDepth = registry.gauge("kiesession.incidents", new AtomicInteger(0));
 
                 future.complete();
             } catch (Exception e) {
@@ -126,6 +129,7 @@ public class RulesVerticle extends AbstractVerticle {
         }
 
         results = ksession.getQueryResults("incidents");
+        kieSessionDepth.set(results.size());
         Integer escalatedIncidents = Math.toIntExact(StreamSupport.stream(results.spliterator(), false).filter(incident -> {
             return ((IncidentPriority)incident.get("incidentPriority")).getEscalated();
         }).count());
