@@ -78,7 +78,7 @@ public class MessageConsumerVerticle extends AbstractVerticle {
             if (INCIDENT_ASSIGNMENT_EVENT.equals(messageType)) {
                 if (event.getString("incidentId") == null || event.getBoolean("assignment") == null ||
                         event.getDouble("lat") == null || event.getDouble("lon") == null) {
-                    log.warn("Message of type '" + "' has unexpected structure: " + event.toString());
+                    log.warn("Message of type '" + messageType + "' has unexpected structure: " + event.toString());
                     return;
                 }
                 String incidentId = event.getString("incidentId");
@@ -87,16 +87,16 @@ public class MessageConsumerVerticle extends AbstractVerticle {
 
                 vertx.eventBus().send("incident-assignment-event", event);
             } else if (INCIDENT_REPORTED_EVENT.equals(messageType)) {
-                if (event.getString("incidentId") == null ||
+                if (event.getString("id") == null ||
                         event.getDouble("lat") == null || event.getDouble("lon") == null) {
-                    log.warn("Message of type '" + "' has unexpected structure: " + event.toString());
+                    log.warn("Message of type '" + messageType + "' has unexpected structure: " + event.toString());
                     return;
                 }
                 JsonObject payload = new JsonObject()
                         .put("incidentId", event.getString("id"))
                         .put("assigment", false)
-                        .put("lat", event.getDouble("lat").toString())
-                        .put("lon", event.getDouble("lon").toString());
+                        .put("lat", event.getDouble("lat"))
+                        .put("lon", event.getDouble("lon"));
 
                 String incidentId = payload.getString("incidentId");
                 log.debug("Consumed '" + messageType + "' message for incident '" + incidentId + "'. Topic: " + msg.topic()
