@@ -23,6 +23,7 @@
     <version.logback>1.2.3</version.logback>
     <version.logstash>5.1</version.logstash>
     <version.junit>4.13.1</version.junit>
+    <version.commons-text>1.8</version.commons-text>
     <vertx.launcher>com.redhat.emergency.response.incident.priority.launcher.Launcher</vertx.launcher>
   </properties>
   <dependencyManagement>
@@ -92,6 +93,11 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>${version.commons-lang3}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>${version.commons-text}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

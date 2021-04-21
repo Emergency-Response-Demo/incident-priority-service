@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.redhat.emergency.response.incident.priority.cloudevents.StringCloudEventData;
 import io.cloudevents.CloudEvent;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -74,7 +75,7 @@ public class MessageConsumerVerticle extends AbstractVerticle {
                 log.warn("Message " + msg.key() + " has no contents. Ignoring message");
                 return;
             }
-            JsonObject event = new JsonObject(new String(cloudEvent.getData().toBytes()));
+            JsonObject event = new JsonObject(((StringCloudEventData)cloudEvent.getData()).value());
             if (INCIDENT_ASSIGNMENT_EVENT.equals(messageType)) {
                 if (event.getString("incidentId") == null || event.getBoolean("assignment") == null ||
                         event.getDouble("lat") == null || event.getDouble("lon") == null) {
