@@ -17,7 +17,7 @@
     <version.vertx-maven-plugin>1.0.20</version.vertx-maven-plugin>
     <version.rhdm>7.18.0.Final-redhat-00002</version.rhdm>
     <version.prometheus>0.0.23</version.prometheus>
-    <version.commons-io>2.6</version.commons-io>
+    <version.commons-io>2.7</version.commons-io>
     <version.commons-lang3>3.8.1</version.commons-lang3>
     <version.slf4j>1.7.25</version.slf4j>
     <version.logback>1.2.3</version.logback>
